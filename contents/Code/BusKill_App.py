@@ -166,7 +166,7 @@ class MainWindow(Qt.QMainWindow):
         self.Trigger = self.MainTriggerMenu.currentText()
         self.Device = self.MainDeviceMenu.currentText()
         if self.APP_CTRL._validation(self.Trigger, self.Device) == True:
-            self.close()
+            self.hide()
             self.runpage = BusKill_Run(self.Trigger, self.Device)
             self.runpage.show()
         else:
@@ -183,6 +183,13 @@ class MainWindow(Qt.QMainWindow):
             self.APP_CTRL._errorHandling("Critical", "Validation has failed")
             return
 
+    def _createBusKillConf(self):
+        if self.APP_CTRL._validation(self.ConfigTriggerMenu.currentText(), self.ConfigDeviceMenu.currentText()) == True:
+            self.APP_CONF._createConfig(self.ConfigSaveAs.currentText(), self.ConfigDeviceMenu.currentText(), self.ConfigTriggerMenu.currentText())
+            self.update()
+        else:
+            self.APP_CTRL._errorHandling("Critical", "Validation Failed, Configuration not saved")
+        
 class BusKill_Run(Qt.QMainWindow):
 
     def __init__(self, Trigger, Device):
