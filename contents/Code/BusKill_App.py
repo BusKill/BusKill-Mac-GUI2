@@ -66,6 +66,8 @@ class MainWindow(Qt.QMainWindow):
 
         self.MainConfigMenu = Qt.QComboBox(self)
         self.MainConfigMenu.setFixedSize(175, 30)
+        if self.Configs is None:
+            self.Configs = list()
         if len(self.Configs) != 0:
             self.MainConfigMenu.addItem("--config--")
             for entry in self.Configs:
