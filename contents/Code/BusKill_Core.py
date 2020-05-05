@@ -50,9 +50,9 @@ class Controller:
         try:
             self.Config = []
             self.dirlist = os.listdir(self.CONFIGLOCATION)
-            self.Config.append("DUMMY DATA")
-            #shit tonne of if statements
-
+            for file in self.dirlist:
+                if file.endswith("BSConf"):
+                    self.Config.append(file)
             return self.Config
         except FileNotFoundError:
             self._writeLog("INFO", "Check for config... None Found")
@@ -136,14 +136,15 @@ class Runtime(QThread):
 class Configuration: #This Class will need to be fixed
 
     def __init__(self, CONFIGLOCATION):
+        self.APP_CTRL = Controller()
         self.CONFIGLOCATION = CONFIGLOCATION
 
     def _createConfig(self, name, Device, Trigger):
-        config = self.CONFIGLOCATION name + ".BSConf"
+        config = self.CONFIGLOCATION + name + ".BSConf"
         attempt = 0 
         while attempt != 2:
             try:
-                with open(self.CONFIGLOCATION+name+".BSConf","a") as NewConfig:
+                with open(config,"a") as NewConfig:
                     NewConfig.write("THIS FILE CAN BE MODIFIED MANUALLY. IF IT FAILS VALIDATION PLEASE CLEAR CONFIGURATION \n")
                     NewConfig.write("Trigger:"+Trigger+"\n")
                     NewConfig.write("Device:"+Device+"\n")
@@ -153,8 +154,7 @@ class Configuration: #This Class will need to be fixed
                 Path(config).touch
                 attempt+=1
                 if attempt == 2:
-                    function = None
-                    #returns an error popup
+                    self.APP_CTRL._errorHandling("Critical", "Configuration File could not be generated")
 
     def _getConf(self, name):
         self.values = []
@@ -164,5 +164,4 @@ class Configuration: #This Class will need to be fixed
                 self.values.append(Conf.readline()[2].split(":")[1]) #Device
                 return self.values
         except IOError:
-            function = None
-            #return an error pop up and go back to main
+            self.APP_CTRL._errorHandling("Critical", "Configuration File could not be read")

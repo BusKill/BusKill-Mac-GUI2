@@ -77,7 +77,7 @@ class MainWindow(Qt.QMainWindow):
         if len(self.Configs) != 0:
             self.RunWithConfig = Qt.QPushButton("Go!")
             self.RunWithConfig.setFixedSize(179, 30)
-            #self.RunWithConfig.clicked.connect(APP_CTRL._runConf)
+            self.RunWithConfig.clicked.connect(self._runBusKillWithConf)
             self.MainTab.layout.addWidget(self.RunWithConfig, 3, 2)
 
         self.Tabs.addTab(self.MainTab, "Main")
@@ -117,7 +117,7 @@ class MainWindow(Qt.QMainWindow):
 
         self.SaveConfig = Qt.QPushButton("Save Configuration")
         self.SaveConfig.setFixedSize(175, 30)
-        #self.SaveConfig.clicked.connect()
+        self.SaveConfig.clicked.connect(self._createBusKillConf)
         self.ConfigTab.layout.addWidget(self.SaveConfig, 4, 0)
 
         self.Tabs.addTab(self.ConfigTab, "Config")
@@ -185,7 +185,7 @@ class MainWindow(Qt.QMainWindow):
 
     def _createBusKillConf(self):
         if self.APP_CTRL._validation(self.ConfigTriggerMenu.currentText(), self.ConfigDeviceMenu.currentText()) == True:
-            self.APP_CONF._createConfig(self.ConfigSaveAs.currentText(), self.ConfigDeviceMenu.currentText(), self.ConfigTriggerMenu.currentText())
+            self.APP_CONF._createConfig(self.ConfigSaveAs.text(), self.ConfigDeviceMenu.currentText(), self.ConfigTriggerMenu.currentText())
             self.update()
         else:
             self.APP_CTRL._errorHandling("Critical", "Validation Failed, Configuration not saved")
