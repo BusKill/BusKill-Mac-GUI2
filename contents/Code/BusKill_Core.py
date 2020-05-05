@@ -39,7 +39,7 @@ class Controller:
         try:
             self.Config = []
             self.dirlist = os.listdir("../Config/")
-            self.config.append("DUMMY DATA")
+            self.Config.append("DUMMY DATA")
             #shit tonne of if statements
 
             return self.Config
@@ -83,8 +83,8 @@ class Controller:
     def _errorHandling(self, Severity, Message):
         if Severity.lower() == "critical":
             window = BusKill_GUIElements.BusKill_CritMessage(Message)
-        elif severity.lower() == "informative":
-            window = BusKill_GUIElements.BusKill_InfoMessage(Message)
+        #elif Severity.lower() == "informative":
+            #window = BusKill_GUIElements.BusKill_InfoMessage(Message)
 
         self._writeLog(Severity, Message)
 
@@ -117,7 +117,7 @@ class Configuration:
         pass
 
     def _createConfig(self, name, Device, Trigger):
-        if os.file.exists(os.path.join("Config/",name,".BSConf")) == False:
+        if os.path.exists(os.path.join("Config/",name,".BSConf")) == False:
             with open("Config/"+name+".BSConf","a") as NewConfig:
                 NewConfig.write("THIS FILE CAN BE MODIFIED MANUALLY. IF IT FAILS VALIDATION PLEASE CLEAR CONFIGURATION \n")
                 NewConfig.write("Trigger:"+Trigger+"\n")
@@ -131,9 +131,9 @@ class Configuration:
         self.values = []
         try:
             with open("Config/"+name+".BSConf") as Conf:
-                self.values.append(conf.readlines()[1].split(":")[1]) #Trigger
-                self.values.append(conf.readline()[2].split(":")[1]) #Device
+                self.values.append(Conf.readlines()[1].split(":")[1]) #Trigger
+                self.values.append(Conf.readline()[2].split(":")[1]) #Device
                 return self.values
-        except IOERROR:
+        except IOError:
             function = None
             #return an error pop up and go back to main
