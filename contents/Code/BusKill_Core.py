@@ -4,6 +4,7 @@ import sys
 import subprocess
 import datetime
 import BusKill_GUIElements
+from pathlib import Path
 from PyQt5.QtCore import QThread
 
 class Controller:
@@ -35,7 +36,7 @@ class Controller:
 
     def _getDevices(self):
         self.Devices = os.listdir("/dev")
-        self.Disk_Devices = ["DUMMY DATA"]
+        self.Disk_Devices = []
         for Device in self.Devices:
             if fnmatch.fnmatch(Device, "*disk*"):
                 if Device.startswith("r") == False:
@@ -86,10 +87,20 @@ class Controller:
     #unsupported
     def _selectTriggerInstaller(self):
         function = None
-    #unsupported
+    
     def _writeLog(self, Severity, Message):
-        with open(self.LOGLOCATION + "Log -" + datetime.date.today()) as Log: #not sure if this will work, may require manual creation
-          Log.write(str(datetime.datetime.now().ctime()) + " - " + Severity + " - " + Message + "\n")  
+        log = self.LOGLOCATION + "Log - " + str(datetime.date.today())
+        attempt = 0
+        while attempt != 2:
+            try:
+                with open(log, "a") as Log: #not sure if this will work, may require manual creation
+                    Log.write(str(datetime.datetime.now().ctime()) + " - " + Severity + " - " + Message + "\n")  
+                    attempt = 2
+            except FileNotFoundError:
+                Path(log).touch()
+                attempt+=1
+                if attempt == 2:
+                    BusKill_GUIElements.BusKill_CritMessage("Log File could not be created/Found")
 
     def _errorHandling(self, Severity, Message):
         if Severity.lower() == "critical":
@@ -122,7 +133,7 @@ class Runtime(QThread):
     def stop(self):
         self.runs = False
 
-class Configuration:
+class Configuration: #This Class will need to be fixed
 
     def __init__(self):
         pass
