@@ -24,7 +24,7 @@ class Controller:
 
     def _getTriggers(self):
         try:
-            self.Triggers = []
+            self.Triggers = list()
             self.dirlist = os.listdir(self.TRIGLOCATION)
             for dir in self.dirlist:
                 if os.path.isdir(os.path.join(self.TRIGLOCATION, dir)) == True:
@@ -36,7 +36,7 @@ class Controller:
 
     def _getDevices(self):
         self.Devices = os.listdir("/dev")
-        self.Disk_Devices = []
+        self.Disk_Devices = list()
         for Device in self.Devices:
             if fnmatch.fnmatch(Device, "*disk*"):
                 if Device.startswith("r") == False:
@@ -48,15 +48,16 @@ class Controller:
 
     def _getConfig(self):
         try:
-            self.Config = []
+            self.Config = list()
             self.dirlist = os.listdir(self.CONFIGLOCATION)
-            for file in self.dirlist:
-                if file.endswith("BSConf"):
-                    self.Config.append(file)
+            print(self.dirlist, self.CONFIGLOCATION)
+            for File in self.dirlist:
+                if File.endswith("BSConf"):
+                    self.Config.append(File)
             return self.Config
         except FileNotFoundError:
             self._writeLog("INFO", "Check for config... None Found")
-            pass
+            print(self.dirlist, self.CONFIGLOCATION)
 
     def _executeTrigger(self, Trigger):
         subprocess.call("python " + self.TRIGLOCATION + Trigger + "/Trigger.py", shell = True)
