@@ -135,11 +135,11 @@ class Runtime(QThread):
 
 class Configuration: #This Class will need to be fixed
 
-    def __init__(self):
-        pass
+    def __init__(self, CONFIGLOCATION):
+        self.CONFIGLOCATION = CONFIGLOCATION
 
     def _createConfig(self, name, Device, Trigger):
-        with open(APP_CTRL.CONFIGLOCATION+name+".BSConf","a") as NewConfig:
+        with open(self.CONFIGLOCATION+name+".BSConf","a") as NewConfig:
             NewConfig.write("THIS FILE CAN BE MODIFIED MANUALLY. IF IT FAILS VALIDATION PLEASE CLEAR CONFIGURATION \n")
             NewConfig.write("Trigger:"+Trigger+"\n")
             NewConfig.write("Device:"+Device+"\n")
@@ -148,7 +148,7 @@ class Configuration: #This Class will need to be fixed
     def _getConf(self, name):
         self.values = []
         try:
-            with open(APP_CTRL.CONFIGLOCATION+name+".BSConf") as Conf:
+            with open(self.CONFIGLOCATION+name+".BSConf") as Conf:
                 self.values.append(Conf.readlines()[1].split(":")[1]) #Trigger
                 self.values.append(Conf.readline()[2].split(":")[1]) #Device
                 return self.values

@@ -13,7 +13,7 @@ class MainWindow(Qt.QMainWindow):
         self.setWindowTitle("BusKill Mac")
         self.setFixedSize(500,200)
         self.APP_CTRL = Controller()
-        self.APP_CONF = Configuration()
+        self.APP_CONF = Configuration(self.APP_CTRL.CONFIGLOCATION)
         self.Triggers = self.APP_CTRL._getTriggers()
         self.Devices = self.APP_CTRL._getDevices()
         self.Configs = self.APP_CTRL._getConfig()
