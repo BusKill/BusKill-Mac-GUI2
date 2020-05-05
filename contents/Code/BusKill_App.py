@@ -122,44 +122,45 @@ class MainWindow(Qt.QMainWindow):
 
         self.Tabs.addTab(self.ConfigTab, "Config")
 
+        #IGNORE
         self.AdvancedTab = Qt.QWidget(self)
         self.AdvancedTab.layout = Qt.QGridLayout(self)
         self.AdvancedTab.setLayout(self.AdvancedTab.layout)
-
+ 
         #Left Pane
-        self.AdvancedLogLabel = Qt.QLabel("Logging")
-        self.AdvancedLogLabel.setFixedSize(175, 20)
-        self.AdvancedTab.layout.addWidget(self.AdvancedLogLabel, 0, 0)
+#        self.AdvancedLogLabel = Qt.QLabel("Logging")
+#        self.AdvancedLogLabel.setFixedSize(175, 20)
+#        self.AdvancedTab.layout.addWidget(self.AdvancedLogLabel, 0, 0)
 
-        self.ExportFileLocation = Qt.QGridLayout(self)
-        self.ExportFileLocationLineEdit = Qt.QLineEdit(self)
-        self.ExportFileLocation.addWidget(self.ExportFileLocationLineEdit, 0, 0, 1, 7)
-        self.ExportFileLocationButton = Qt.QPushButton()
-        #self.ExportFileLocationButton.clicked.connect()
-        self.ExportFileLocation.addWidget(self.ExportFileLocationButton, 0, 8)
+#        self.ExportFileLocation = Qt.QGridLayout(self)
+#        self.ExportFileLocationLineEdit = Qt.QLineEdit(self)
+#        self.ExportFileLocation.addWidget(self.ExportFileLocationLineEdit, 0, 0, 1, 7)
+#        self.ExportFileLocationButton = Qt.QPushButton()
+#        self.ExportFileLocationButton.clicked.connect()
+#        self.ExportFileLocation.addWidget(self.ExportFileLocationButton, 0, 8)
 
-        self.AdvancedTab.layout.addLayout(self.ExportFileLocation, 1, 0)
+#        self.AdvancedTab.layout.addLayout(self.ExportFileLocation, 1, 0)
 
-        self.AdvancedLogExport = Qt.QPushButton("Export Log File")
-        #self.AdvancedLogExport.clicked.connect()
-        self.AdvancedTab.layout.addWidget(self.AdvancedLogExport, 2, 0)
+#        self.AdvancedLogExport = Qt.QPushButton("Export Log File")
+#        #self.AdvancedLogExport.clicked.connect()
+#        self.AdvancedTab.layout.addWidget(self.AdvancedLogExport, 2, 0)
 
         #Right Pane
-        self.AdvancedTriggerLabel = Qt.QLabel("Triggers")
-        self.AdvancedTab.layout.addWidget(self.AdvancedTriggerLabel, 0, 1)
+#        self.AdvancedTriggerLabel = Qt.QLabel("Triggers")
+#        self.AdvancedTab.layout.addWidget(self.AdvancedTriggerLabel, 0, 1)
 
-        self.InstallTrigger = Qt.QGridLayout(self)
-        self.InstallTriggerLineEdit = Qt.QLineEdit(self)
-        self.InstallTrigger.addWidget(self.InstallTriggerLineEdit, 0, 0, 1, 7)
-        self.InstallTriggerLocation = Qt.QPushButton()
-        self.InstallTrigger.addWidget(self.InstallTriggerLocation, 0, 8)
-        #self.InstallTriggerLocation.clicked.connect()
-        self.AdvancedTab.layout.addLayout(self.InstallTrigger, 1, 1)
+#        self.InstallTrigger = Qt.QGridLayout(self)
+#        self.InstallTriggerLineEdit = Qt.QLineEdit(self)
+#        self.InstallTrigger.addWidget(self.InstallTriggerLineEdit, 0, 0, 1, 7)
+#        self.InstallTriggerLocation = Qt.QPushButton()
+#        self.InstallTrigger.addWidget(self.InstallTriggerLocation, 0, 8)
+#        self.InstallTriggerLocation.clicked.connect()
+#        self.AdvancedTab.layout.addLayout(self.InstallTrigger, 1, 1)
 
-        self.InstallTriggerButton = Qt.QPushButton("Install Trigger")
-        self.AdvancedTab.layout.addWidget(self.InstallTriggerButton, 2, 1)
+#        self.InstallTriggerButton = Qt.QPushButton("Install Trigger")
+#        self.AdvancedTab.layout.addWidget(self.InstallTriggerButton, 2, 1)
 
-        self.Tabs.addTab(self.AdvancedTab, "Advanced")
+ #       self.Tabs.addTab(self.AdvancedTab, "Advanced")
 
     def _runBusKill(self):
         self.Trigger = self.MainTriggerMenu.currentText()
@@ -169,17 +170,17 @@ class MainWindow(Qt.QMainWindow):
             self.runpage = BusKill_Run(self.Trigger, self.Device)
             self.runpage.show()
         else:
-            APP_CTRL._errorHandling("Critical", "Validation has failed")
+            self.APP_CTRL._errorHandling("Critical", "Validation has failed")
             return
 
     def _runBusKillWithConf(self):
-        Vars = Configuration._getConf(self.MainConfigMenu.currentText())
+        Vars = self.APP_CONF._getConf(self.MainConfigMenu.currentText())
         if self.APP_CTRL._validation(Vars[0], Vars[1]) == True:
             self.hide()
             self.runpage = BusKill_Run(Vars[0], Vars[1])
             self.runpage.show()
         else:
-            APP_CTRL._errorHandling("Critical", "Validation has failed")
+            self.APP_CTRL._errorHandling("Critical", "Validation has failed")
             return
 
 class BusKill_Run(Qt.QMainWindow):
