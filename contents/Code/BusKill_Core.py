@@ -50,14 +50,12 @@ class Controller:
         try:
             self.Config = list()
             self.dirlist = os.listdir(self.CONFIGLOCATION)
-            print(self.dirlist, self.CONFIGLOCATION)
             for File in self.dirlist:
                 if File.endswith("BSConf"):
                     self.Config.append(File)
             return self.Config
         except FileNotFoundError:
             self._writeLog("INFO", "Check for config... None Found")
-            print(self.dirlist, self.CONFIGLOCATION)
 
     def _executeTrigger(self, Trigger):
         subprocess.call("python " + self.TRIGLOCATION + Trigger + "/Trigger.py", shell = True)
@@ -160,9 +158,10 @@ class Configuration: #This Class will need to be fixed
     def _getConf(self, name):
         self.values = []
         try:
-            with open(self.CONFIGLOCATION+name+".BSConf") as Conf:
-                self.values.append(Conf.readlines()[1].split(":")[1]) #Trigger
-                self.values.append(Conf.readline()[2].split(":")[1]) #Device
+            with open(self.CONFIGLOCATION+name) as Conf:
+                Data = Conf.readlines()
+                self.values.append(Data[1].split(":")[1].rstrip())
+                self.values.append(Data[2].split(":")[1].rstrip())
                 return self.values
         except IOError:
             self.APP_CTRL._errorHandling("Critical", "Configuration File could not be read")
