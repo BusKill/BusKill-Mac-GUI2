@@ -10,18 +10,25 @@ class MainWindow(Qt.QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.VERSION_NO = "V1.0"
         self.setWindowTitle("BusKill Mac")
         self.setFixedSize(500,200)
+        
         self.APP_CTRL = Controller()
         self.APP_CONF = Configuration(self.APP_CTRL.CONFIGLOCATION)
+
         self.Triggers = self.APP_CTRL._getTriggers()
         self.Devices = self.APP_CTRL._getDevices()
         self.Configs = self.APP_CTRL._getConfig()
 
+        self.Master = Qt.QWidget()
+        self.MasterLayout = Qt.QVBoxLayout()
+        self.Master.setLayout(self.MasterLayout)
+        self.setCentralWidget(self.Master)
+
         #Tabs
         self.Tabs = Qt.QTabWidget(self)
-        self.Tabs.setFixedSize(500,200)
-        self.setCentralWidget(self.Tabs)
+        self.Tabs.setFixedSize(500,150)
         self.MainTab = Qt.QWidget(self)
 
         self.MainTab.layout = Qt.QGridLayout()
@@ -83,44 +90,45 @@ class MainWindow(Qt.QMainWindow):
             self.MainTab.layout.addWidget(self.RunWithConfig, 3, 2)
 
         self.Tabs.addTab(self.MainTab, "Main")
-
+        #Broken Layout self.ConfigTab
         self.ConfigTab = Qt.QWidget(self)
-        self.ConfigTab.layout = Qt.QGridLayout(self)
+        self.ConfigTab.layout = Qt.QGridLayout()
+        self.ConfigTab.layout.setSpacing(20)
         self.ConfigTab.setLayout(self.ConfigTab.layout)
 
         self.ConfigureBusKillLabel = Qt.QLabel("Configure BusKill")
-        self.ConfigureBusKillLabel.setFixedSize(175, 30)
-        self.ConfigTab.layout.addWidget(self.ConfigureBusKillLabel, 0, 0)
+        self.ConfigureBusKillLabel.setFixedSize(175, 15)
+        self.ConfigTab.layout.addWidget(self.ConfigureBusKillLabel, 1, 0)
 
         self.ConfigTriggerMenu = Qt.QComboBox(self)
-        self.ConfigTriggerMenu.setFixedSize(175,30)
+        self.ConfigTriggerMenu.setFixedSize(175,20)
         if len(self.Triggers) != 0:
             self.ConfigTriggerMenu.addItem("--Trigger--")
             for entry in self.Triggers:
                 self.ConfigTriggerMenu.addItem(entry)
         else:
             self.ConfigTriggerMenu.addItem("No Triggers Found!")
-        self.ConfigTab.layout.addWidget(self.ConfigTriggerMenu, 1, 0)
+        self.ConfigTab.layout.addWidget(self.ConfigTriggerMenu, 2, 0)
 
         self.ConfigDeviceMenu = Qt.QComboBox(self)
-        self.ConfigDeviceMenu.setFixedSize(175,30)
+        self.ConfigDeviceMenu.setFixedSize(175,20)
         if len(self.Devices) != 0:
             self.ConfigDeviceMenu.addItem("--Device--")
             for entry in self.Devices:
                 self.ConfigDeviceMenu.addItem(entry)
         else:
             self.ConfigDeviceMenu.addItem("No Devices Found!")
-        self.ConfigTab.layout.addWidget(self.ConfigDeviceMenu, 2, 0)
+        self.ConfigTab.layout.addWidget(self.ConfigDeviceMenu, 3, 0)
 
         self.ConfigSaveAs = Qt.QLineEdit(self)
         self.ConfigSaveAs.setFixedSize(175, 20)
         self.ConfigSaveAs.placeholderText()
-        self.ConfigTab.layout.addWidget(self.ConfigSaveAs, 3, 0)
+        self.ConfigTab.layout.addWidget(self.ConfigSaveAs, 4, 0)
 
         self.SaveConfig = Qt.QPushButton("Save Configuration")
-        self.SaveConfig.setFixedSize(175, 30)
+        self.SaveConfig.setFixedSize(175, 25)
         self.SaveConfig.clicked.connect(self._createBusKillConf)
-        self.ConfigTab.layout.addWidget(self.SaveConfig, 4, 0)
+        self.ConfigTab.layout.addWidget(self.SaveConfig, 5, 0)
 
         self.Tabs.addTab(self.ConfigTab, "Config")
 
@@ -162,7 +170,29 @@ class MainWindow(Qt.QMainWindow):
 #        self.InstallTriggerButton = Qt.QPushButton("Install Trigger")
 #        self.AdvancedTab.layout.addWidget(self.InstallTriggerButton, 2, 1)
 
- #       self.Tabs.addTab(self.AdvancedTab, "Advanced")
+#        self.Tabs.addTab(self.AdvancedTab, "Advanced")
+
+        self.MasterLayout.addWidget(self.Tabs)
+
+        #Dock
+        self.Dock = Qt.QWidget()
+        self.DockContainer = Qt.QHBoxLayout()
+        self.Dock.setLayout(self.DockContainer)
+
+        self.VersionNumberLabel = Qt.QLabel("Version: " + self.VERSION_NO)
+        self.DockContainer.addWidget(self.VersionNumberLabel)
+
+        self.RefreshButton = Qt.QPushButton("Refresh")
+        self.RefreshButton.setFixedSize(100, 25)
+        self.RefreshButton.clicked.connect(self._refreshMain)
+        self.DockContainer.addWidget(self.RefreshButton)
+
+        self.MasterLayout.addWidget(self.Dock)
+
+    #This should refresh the code, Doesn't do anythin not really sure why 
+    def _refreshMain(self):
+        self.hide()
+        self.show()
 
     def _runBusKill(self):
         self.Trigger = self.MainTriggerMenu.currentText()
@@ -236,7 +266,7 @@ class BusKill_Run(Qt.QMainWindow):
         self.run = Runtime(Trigger, Device)
         self.run.start()
 
-    def _backToMain(self): #Closes Application, Causes python to crash, doesnt actually stop the Trigger. It Doesnt really work at all
+    def _backToMain(self):
         self.run.stop()
         self.close()
         self.Main = MainWindow()
