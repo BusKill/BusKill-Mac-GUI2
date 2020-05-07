@@ -68,15 +68,11 @@ class Controller:
             #add WriteLog in here
 
     def _validation(self, Trigger ,Device):
-        Trig = True
-        Dev = True
+        Dev = False
+        Trig = False
         #add some actual validation in here.
         #add some specific self._errorHandling() Messages Depending on what has failed Validation
-        return Trig and Dev
-
-    #unsupported
-    def _createConfig(self):
-        function = None
+        return True
     #unsupported
     def _exportLog(self):
         function = None

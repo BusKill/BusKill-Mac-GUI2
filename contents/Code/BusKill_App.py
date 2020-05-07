@@ -10,7 +10,7 @@ class MainWindow(Qt.QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.VERSION_NO = "V1.0"
+        self.VERSION_NO = "V1.1"
         self.setWindowTitle("BusKill Mac")
         self.setFixedSize(500,200)
         
@@ -39,25 +39,10 @@ class MainWindow(Qt.QMainWindow):
         self.RunWithOptionLabel.setFixedSize(175, 30)
         self.MainTab.layout.addWidget(self.RunWithOptionLabel, 0, 0)
 
-        self.MainTriggerMenu = Qt.QComboBox(self)
-        self.MainTriggerMenu.setFixedSize(175, 30)
-        if len(self.Triggers) != 0:
-            self.MainTriggerMenu.addItem("--Triggers--")
-            for entry in self.Triggers:
-                self.MainTriggerMenu.addItem(entry)
-        else:
-            self.MainTriggerMenu.addItem("No Triggers Found!")
-            self.APP_CTRL._errorHandling("Critical", "No Triggers Found!")
+        self.MainTriggerMenu = self._triggerDropDown(self.Triggers)
         self.MainTab.layout.addWidget(self.MainTriggerMenu, 1, 0)
 
-        self.MainDeviceMenu = Qt.QComboBox(self)
-        self.MainDeviceMenu.setFixedSize(175, 30)
-        if len(self.Devices) != 0:
-            self.MainDeviceMenu.addItem("--Devices--")
-            self.MainDeviceMenu.addItems(self.Devices)
-        else:
-            self.MainDeviceMenu.addItem("No Devices Found!")
-            self.APP_CTRL._errorHandling("Critical", "No Devices Found!")
+        self.MainDeviceMenu = self._deviceDropDown(self.Devices)
         self.MainTab.layout.addWidget(self.MainDeviceMenu, 2, 0)
 
         if len(self.Devices) != 0 and len(self.Triggers) != 0:
@@ -100,24 +85,10 @@ class MainWindow(Qt.QMainWindow):
         self.ConfigureBusKillLabel.setFixedSize(175, 15)
         self.ConfigTab.layout.addWidget(self.ConfigureBusKillLabel, 1, 0)
 
-        self.ConfigTriggerMenu = Qt.QComboBox(self)
-        self.ConfigTriggerMenu.setFixedSize(175,20)
-        if len(self.Triggers) != 0:
-            self.ConfigTriggerMenu.addItem("--Trigger--")
-            for entry in self.Triggers:
-                self.ConfigTriggerMenu.addItem(entry)
-        else:
-            self.ConfigTriggerMenu.addItem("No Triggers Found!")
+        self.ConfigTriggerMenu = self._triggerDropDown(self.Triggers)
         self.ConfigTab.layout.addWidget(self.ConfigTriggerMenu, 2, 0)
 
-        self.ConfigDeviceMenu = Qt.QComboBox(self)
-        self.ConfigDeviceMenu.setFixedSize(175,20)
-        if len(self.Devices) != 0:
-            self.ConfigDeviceMenu.addItem("--Device--")
-            for entry in self.Devices:
-                self.ConfigDeviceMenu.addItem(entry)
-        else:
-            self.ConfigDeviceMenu.addItem("No Devices Found!")
+        self.ConfigDeviceMenu = self._deviceDropDown(self.Devices)
         self.ConfigTab.layout.addWidget(self.ConfigDeviceMenu, 3, 0)
 
         self.ConfigSaveAs = Qt.QLineEdit(self)
@@ -184,15 +155,36 @@ class MainWindow(Qt.QMainWindow):
 
         self.RefreshButton = Qt.QPushButton("Refresh")
         self.RefreshButton.setFixedSize(100, 25)
-        self.RefreshButton.clicked.connect(self._refreshMain)
+        #self.RefreshButton.clicked.connect(self._refreshMain)
         self.DockContainer.addWidget(self.RefreshButton)
 
         self.MasterLayout.addWidget(self.Dock)
 
-    #This should refresh the code, Doesn't do anythin not really sure why 
-    def _refreshMain(self):
-        self.hide()
-        self.show()
+    def _triggerDropDown(self, Trigger_List):
+        TriggerDropDown = Qt.QComboBox()
+        TriggerDropDown.setFixedSize(175, 30)
+        if len(Trigger_List) != 0:
+            TriggerDropDown.addItem("--Trigger--")
+            for entry in Trigger_List:
+                TriggerDropDown.addItem(entry)
+        else:
+            TriggerDropDown.addItem("No Triggers Found!")
+            self.APP_CTRL._errorHandling("Critical", "No Triggers Found!")
+
+        return TriggerDropDown
+
+    def _deviceDropDown(self, Device_List):
+        DeviceDropDown = Qt.QComboBox()
+        DeviceDropDown.setFixedSize(175, 30)
+        if len(Device_List) != 0:
+            DeviceDropDown.addItem("--Device--")
+            for entry in Device_List:
+                DeviceDropDown.addItem(entry)
+        else:
+            DeviceDropDown.addItem("No Devices Found!")
+            self.APP_CTRL._errorHandling("Crtitcal", "No Usable Devices Found")
+
+        return DeviceDropDown
 
     def _runBusKill(self):
         self.Trigger = self.MainTriggerMenu.currentText()
@@ -271,7 +263,6 @@ class BusKill_Run(Qt.QMainWindow):
         self.close()
         self.Main = MainWindow()
         self.Main.show()
-
 
 def main():
     app = Qt.QApplication(sys.argv)
