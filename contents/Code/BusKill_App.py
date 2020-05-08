@@ -12,7 +12,7 @@ class MainWindow(Qt.QMainWindow):
 
         self.VERSION_NO = "V1.1"
         self.setWindowTitle("BusKill Mac")
-        self.setFixedSize(500,200)
+        self.setFixedSize(500,250)
         
         self.APP_CTRL = Controller()
         self.APP_CONF = Configuration(self.APP_CTRL.CONFIGLOCATION)
@@ -28,7 +28,7 @@ class MainWindow(Qt.QMainWindow):
 
         #Tabs
         self.Tabs = Qt.QTabWidget(self)
-        self.Tabs.setFixedSize(500,150)
+        self.Tabs.setFixedSize(500,200)
         self.MainTab = Qt.QWidget(self)
 
         self.MainTab.layout = Qt.QGridLayout()
@@ -76,9 +76,10 @@ class MainWindow(Qt.QMainWindow):
 
         self.Tabs.addTab(self.MainTab, "Main")
         #Broken Layout self.ConfigTab
+
         self.ConfigTab = Qt.QWidget(self)
         self.ConfigTab.layout = Qt.QGridLayout()
-        self.ConfigTab.layout.setSpacing(20)
+        self.ConfigTab.layout.setContentsMargins(0, 10, 0, 10)
         self.ConfigTab.setLayout(self.ConfigTab.layout)
 
         self.ConfigureBusKillLabel = Qt.QLabel("Configure BusKill")
@@ -222,7 +223,7 @@ class BusKill_Run(Qt.QMainWindow):
         self.APP_CTRL = Controller()
 
         self.setWindowTitle("BusKill Mac - running")
-        self.setFixedSize(500, 200)
+        self.setFixedSize(200, 200)
 
         wid = Qt.QWidget(self)
         self.setCentralWidget(wid)
@@ -252,7 +253,7 @@ class BusKill_Run(Qt.QMainWindow):
         self.CloseButton = Qt.QPushButton("Stop BusKill")
         self.CloseButton.setFixedSize(175, 30)
         self.CloseButton.clicked.connect(self._backToMain)
-        self.Layout.addWidget(self.CloseButton, 3, 1)
+        self.Layout.addWidget(self.CloseButton, 3, 0, 1, 0)
 
         self.show()
         self.run = Runtime(Trigger, Device)
