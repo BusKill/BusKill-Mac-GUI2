@@ -103,7 +103,7 @@ class MainWindow(Qt.QMainWindow):
         self.ConfigTab.layout.addWidget(self.SaveConfig, 5, 0)
 
         self.Tabs.addTab(self.ConfigTab, "Config")
-
+        
         self.MasterLayout.addWidget(self.Tabs)
 
         #Dock
