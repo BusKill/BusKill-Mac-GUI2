@@ -10,7 +10,7 @@ class MainWindow(Qt.QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.VERSION_NO = "V1.1"
+        self.VERSION_NO = "V1.0"
         self.setWindowTitle("BusKill Mac")
         self.setFixedSize(500,250)
         
@@ -103,7 +103,7 @@ class MainWindow(Qt.QMainWindow):
         self.ConfigTab.layout.addWidget(self.SaveConfig, 5, 0)
 
         self.Tabs.addTab(self.ConfigTab, "Config")
-        
+
         self.MasterLayout.addWidget(self.Tabs)
 
         #Dock
