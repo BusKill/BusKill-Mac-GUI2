@@ -78,7 +78,6 @@ class MainWindow(Qt.QMainWindow):
             self.MainTab.layout.addWidget(self.RunWithConfig, 3, 2)
 
         self.Tabs.addTab(self.MainTab, "Main")
-        #Broken Layout self.ConfigTab
 
         self.ConfigTab = Qt.QWidget(self)
         self.ConfigTab.layout = Qt.QGridLayout()
@@ -158,7 +157,6 @@ class MainWindow(Qt.QMainWindow):
             self.runpage = BusKill_Run(self.Trigger, self.Device)
             self.runpage.show()
         else:
-            self.APP_CTRL._errorHandling("Critical", "Validation has failed")
             return
 
     def _runBusKillWithConf(self):
@@ -168,7 +166,6 @@ class MainWindow(Qt.QMainWindow):
             self.runpage = BusKill_Run(Vars[0], Vars[1])
             self.runpage.show()
         else:
-            self.APP_CTRL._errorHandling("Critical", "Validation has failed")
             return
 
     def _createBusKillConf(self):
@@ -291,10 +288,13 @@ class Controller:
         Dev = False
         if Device is not None:
             if Device != "--Device--":
-                if self._checkDevice(Device) != False:
-                    Dev = True
+                if Device != "No Devices Found!":
+                    if self._checkDevice(Device) != False:
+                        Dev = True
+                    else:
+                        self._errorHandling("info", "Device Could not be found, may have been prematurely removed")
                 else:
-                    self._errorHandling("Critical", "Device Could not be found, may have been prematurely removed")
+                    self._errorHandling("Info", "This placeholder cannot be used, but no devices were found")
             else:
                 Dev = False
                 self._errorHandling("Info", "Device Cannot be placeholder")
@@ -304,16 +304,20 @@ class Controller:
 
         Trig = False
         if Trigger is not None:
-            if Trigger != "--Trigger--":
-                if os.path.exists(self.APPROOT + "Triggers/" + Trigger + "Trigger.py"):
-                    Trig = True
+            if Trigger != "No Triggers Found!":
+                if Trigger != "--Trigger--":
+                    if os.path.exists(self.APPROOT + "/Triggers/" + Trigger + "/Trigger.py"): #This Line Does not work No Idea why
+                        Trig = True
+                    else:
+                        self._errorHandling("critical", "Trigger.py could not be found in selected Trigger")
                 else:
-                    self._errorHandling("Critical", "Trigger.py could nopt be found in selected Trigger")
+                    self._errorHandling("Info", "This placeholder cannot be used, but no triggers were found")
             else:
                 self._errorHandling("Info", "Trigger Cannot be placeholder")
         else:
             self._errorHandling("Critical", "Device Cannot be None")
-        return True
+        print(Dev & Trig)
+        return Dev & Trig
     #unsupported
     #def _exportLog(self):
         #function = None
@@ -341,7 +345,7 @@ class Controller:
     def _errorHandling(self, Severity, Message):
         if Severity.lower() == "critical":
             BusKill_CritMessage(Message)
-        elif Severity.lower() == "informative":
+        elif Severity.lower() == "info":
             BusKill_InfoMessage(Message)
 
         self._writeLog(Severity, Message)
@@ -364,7 +368,7 @@ class Runtime(QThread):
             if self.APP_CTRL._checkDevice(self.Device) == False:
                 self.APP_CTRL._executeTrigger(self.Trigger)
                 Triggered = True
-        return
+                sys.exit()
 
     def stop(self):
         self.runs = False
@@ -437,5 +441,6 @@ def main():
     UI = MainWindow()
     UI.show()
     app.exec_()
+    sys.exit(app.exec_())
 
 main()
