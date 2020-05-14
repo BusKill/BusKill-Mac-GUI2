@@ -231,15 +231,14 @@ class BusKill_Run(Qt.QMainWindow):
 class Controller:
 
     def __init__(self):
-        self.GETAPPROOT = self._getAppRoot()
-        self.LOGLOCATION = self.GETAPPROOT + "/Logging/"
-        self.TRIGLOCATION = self.GETAPPROOT + "/Triggers/"
-        self.RESOURCELOCATION = self.GETAPPROOT + "/Reosurces/"
-        self.CONFIGLOCATION = self.GETAPPROOT + "/Config/"
+        self.APPROOT = self._getAppRoot()
+        self.LOGLOCATION = self.APPROOT + "/Logging/"
+        self.TRIGLOCATION = self.APPROOT + "/Triggers/"
+        self.RESOURCELOCATION = self.APPROOT + "/Reosurces/"
+        self.CONFIGLOCATION = self.APPROOT + "/Config/"
 
     def _getAppRoot(self): #FIX THIS 
         self.path = os.path.abspath(__file__).split("/")
-        del self.path[len(self.path) - 1]
         del self.path[len(self.path) - 1]
         return "/".join(self.path)
 
@@ -290,19 +289,40 @@ class Controller:
 
     def _validation(self, Trigger ,Device):
         Dev = False
+        if Device is not None:
+            if Device != "--Device--":
+                if self._checkDevice(Device) != False:
+                    Dev = True
+                else:
+                    self._errorHandling("Critical", "Device Could not be found, may have been prematurely removed")
+            else:
+                Dev = False
+                self._errorHandling("Info", "Device Cannot be placeholder")
+        else:
+            Dev = False 
+            self._errorHandling("Critical", "Device Cannot be None")
+
         Trig = False
-        #add some actual validation in here.
-        #add some specific self._errorHandling() Messages Depending on what has failed Validation
+        if Trigger is not None:
+            if Trigger != "--Trigger--":
+                if os.path.exists(self.APPROOT + "Triggers/" + Trigger + "Trigger.py"):
+                    Trig = True
+                else:
+                    self._errorHandling("Critical", "Trigger.py could nopt be found in selected Trigger")
+            else:
+                self._errorHandling("Info", "Trigger Cannot be placeholder")
+        else:
+            self._errorHandling("Critical", "Device Cannot be None")
         return True
     #unsupported
-    def _exportLog(self):
-        function = None
+    #def _exportLog(self):
+        #function = None
     #unsupported
-    def _selectLogSaveLocation(self):
-        function = None
+    #def _selectLogSaveLocation(self):
+        #function = None
     #unsupported
-    def _selectTriggerInstaller(self):
-        function = None
+    #def _selectTriggerInstaller(self):
+        #function = None
     
     def _writeLog(self, Severity, Message):
         log = self.LOGLOCATION + "Log - " + str(datetime.date.today())
@@ -316,13 +336,13 @@ class Controller:
                 Path(log).touch()
                 attempt+=1
                 if attempt == 2:
-                    BusKill_GUIElements.BusKill_CritMessage("Log File could not be created/Found")
+                    BusKill_CritMessage("Log File could not be created/Found")
 
     def _errorHandling(self, Severity, Message):
         if Severity.lower() == "critical":
-            BusKill_GUIElements.BusKill_CritMessage(Message)
+            BusKill_CritMessage(Message)
         elif Severity.lower() == "informative":
-            BusKill_GUIElements.BusKill_InfoMessage(Message)
+            BusKill_InfoMessage(Message)
 
         self._writeLog(Severity, Message)
 
