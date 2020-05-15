@@ -161,12 +161,13 @@ class MainWindow(Qt.QMainWindow):
 
     def _runBusKillWithConf(self):
         Vars = self.APP_CONF._getConf(self.MainConfigMenu.currentText())
-        if self.APP_CTRL._validation(Vars[0], Vars[1]) == True:
-            self.hide()
-            self.runpage = BusKill_Run(Vars[0], Vars[1])
-            self.runpage.show()
-        else:
-            return
+        try:
+            if self.APP_CTRL._validation(Vars[0], Vars[1]) == True:
+                self.hide()
+                self.runpage = BusKill_Run(Vars[0], Vars[1])
+                self.runpage.show()
+        except TypeError:
+            self.APP_CTRL._errorHandling("Info", "You must select a config file")
 
     def _createBusKillConf(self):
         if self.APP_CTRL._validation(self.ConfigTriggerMenu.currentText(), self.ConfigDeviceMenu.currentText()) == True:
@@ -316,7 +317,6 @@ class Controller:
                 self._errorHandling("Info", "Trigger Cannot be placeholder")
         else:
             self._errorHandling("Critical", "Device Cannot be None")
-        print(Dev & Trig)
         return Dev & Trig
     #unsupported
     #def _exportLog(self):
@@ -409,7 +409,8 @@ class Configuration: #This Class will need to be fixed
                 self.values.append(Data[2].split(":")[1].rstrip())
                 return self.values
         except IOError:
-            self.APP_CTRL._errorHandling("Critical", "Configuration File could not be read")
+            if name != "--config--":
+                self.APP_CTRL._errorHandling("Critical", "Configuration File could not be read")
 
 class BusKill_CritMessage:
 
