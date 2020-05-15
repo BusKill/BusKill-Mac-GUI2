@@ -118,7 +118,7 @@ class MainWindow(Qt.QMainWindow):
 
         self.RefreshButton = Qt.QPushButton("Refresh")
         self.RefreshButton.setFixedSize(100, 25)
-        #self.RefreshButton.clicked.connect(self._refreshMain)
+        self.RefreshButton.clicked.connect(self._refreshPage)
         self.DockContainer.addWidget(self.RefreshButton)
 
         self.MasterLayout.addWidget(self.Dock)
@@ -148,6 +148,10 @@ class MainWindow(Qt.QMainWindow):
             self.APP_CTRL._errorHandling("Crtitcal", "No Usable Devices Found")
 
         return DeviceDropDown
+
+    def _refreshPage(self):
+        print("step1 works")
+        self.APP_CTRL._refreshView(self)
 
     def _runBusKill(self):
         self.Trigger = self.MainTriggerMenu.currentText()
@@ -235,7 +239,14 @@ class Controller:
         self.RESOURCELOCATION = self.APPROOT + "/Reosurces/"
         self.CONFIGLOCATION = self.APPROOT + "/Config/"
 
-    def _getAppRoot(self): #FIX THIS 
+    def _refreshView(self, Main):
+        print("goes to ctrl")
+        Main.hide()
+        print("hides")
+        self.New = MainWindow()
+        self.New.show()
+        
+    def _getAppRoot(self): 
         self.path = os.path.abspath(__file__).split("/")
         del self.path[len(self.path) - 1]
         return "/".join(self.path)
@@ -373,7 +384,7 @@ class Runtime(QThread):
     def stop(self):
         self.runs = False
 
-class Configuration: #This Class will need to be fixed
+class Configuration:
 
     def __init__(self, CONFIGLOCATION):
         self.APP_CTRL = Controller()
