@@ -150,7 +150,6 @@ class MainWindow(Qt.QMainWindow):
         return DeviceDropDown
 
     def _refreshPage(self):
-        print("step1 works")
         self.APP_CTRL._refreshView(self)
 
     def _runBusKill(self):
@@ -240,9 +239,7 @@ class Controller:
         self.CONFIGLOCATION = self.APPROOT + "/Config/"
 
     def _refreshView(self, Main):
-        print("goes to ctrl")
         Main.hide()
-        print("hides")
         self.New = MainWindow()
         self.New.show()
         
@@ -294,7 +291,6 @@ class Controller:
             return True
         else:
             return False
-            #add WriteLog in here
 
     def _validation(self, Trigger ,Device):
         Dev = False
@@ -318,7 +314,7 @@ class Controller:
         if Trigger is not None:
             if Trigger != "No Triggers Found!":
                 if Trigger != "--Trigger--":
-                    if os.path.exists(self.APPROOT + "/Triggers/" + Trigger + "/Trigger.py"): #This Line Does not work No Idea why
+                    if os.path.exists(self.APPROOT + "/Triggers/" + Trigger + "/Trigger.py"):
                         Trig = True
                     else:
                         self._errorHandling("critical", "Trigger.py could not be found in selected Trigger")
@@ -344,7 +340,7 @@ class Controller:
         attempt = 0
         while attempt != 2:
             try:
-                with open(log, "a") as Log: #not sure if this will work, may require manual creation
+                with open(log, "a") as Log:
                     Log.write(str(datetime.datetime.now().ctime()) + " - " + Severity + " - " + Message + "\n")  
                     attempt = 2
             except FileNotFoundError:
