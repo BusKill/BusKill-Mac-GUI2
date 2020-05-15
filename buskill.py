@@ -325,6 +325,7 @@ class Controller:
         else:
             self._errorHandling("Critical", "Device Cannot be None")
         return Dev & Trig
+    
     #unsupported
     #def _exportLog(self):
         #function = None
