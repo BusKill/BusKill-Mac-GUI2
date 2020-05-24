@@ -16,7 +16,7 @@ class MainWindow(Qt.QMainWindow):
         self.VERSION_NO = "V1.0"
         self.setWindowTitle("BusKill Mac")
         self.setFixedSize(500,250)
-        
+
         self.APP_CTRL = Controller()
         self.APP_CONF = Configuration(self.APP_CTRL.CONFIGLOCATION)
 
@@ -233,17 +233,16 @@ class Controller:
 
     def __init__(self):
         self.APPROOT = self._getAppRoot()
-        self.LOGLOCATION = self.APPROOT + "/Logging/"
-        self.TRIGLOCATION = self.APPROOT + "/Triggers/"
-        self.RESOURCELOCATION = self.APPROOT + "/Reosurces/"
-        self.CONFIGLOCATION = self.APPROOT + "/Config/"
+        self.LOGLOCATION = "/Logging/"
+        self.TRIGLOCATION = "/Triggers/"
+        self.CONFIGLOCATION = "/Config/"
 
     def _refreshView(self, Main):
         Main.hide()
         self.New = MainWindow()
         self.New.show()
-        
-    def _getAppRoot(self): 
+
+    def _getAppRoot(self):
         self.path = os.path.abspath(__file__).split("/")
         del self.path[len(self.path) - 1]
         return "/".join(self.path)
@@ -284,7 +283,7 @@ class Controller:
             self._writeLog("INFO", "Check for config... None Found")
 
     def _executeTrigger(self, Trigger):
-        subprocess.call("python " + self.TRIGLOCATION + Trigger + "/Trigger.py", shell = True)
+        subprocess.call("Triggers/"+Trigger+"/Trigger.sh")
 
     def _checkDevice(self, Device):
         if os.path.exists("/dev/"+Device) == True:
@@ -307,7 +306,7 @@ class Controller:
                 Dev = False
                 self._errorHandling("Info", "Device Cannot be placeholder")
         else:
-            Dev = False 
+            Dev = False
             self._errorHandling("Critical", "Device Cannot be None")
 
         Trig = False
@@ -325,7 +324,7 @@ class Controller:
         else:
             self._errorHandling("Critical", "Device Cannot be None")
         return Dev & Trig
-    
+
     #unsupported
     #def _exportLog(self):
         #function = None
@@ -335,14 +334,14 @@ class Controller:
     #unsupported
     #def _selectTriggerInstaller(self):
         #function = None
-    
+
     def _writeLog(self, Severity, Message):
         log = self.LOGLOCATION + "Log - " + str(datetime.date.today())
         attempt = 0
         while attempt != 2:
             try:
                 with open(log, "a") as Log:
-                    Log.write(str(datetime.datetime.now().ctime()) + " - " + Severity + " - " + Message + "\n")  
+                    Log.write(str(datetime.datetime.now().ctime()) + " - " + Severity + " - " + Message + "\n")
                     attempt = 2
             except FileNotFoundError:
                 Path(log).touch()
@@ -389,7 +388,7 @@ class Configuration:
 
     def _createConfig(self, name, Device, Trigger):
         config = self.CONFIGLOCATION + name + ".BSConf"
-        attempt = 0 
+        attempt = 0
         while attempt != 2:
             try:
                 if os.path.exists(config):
