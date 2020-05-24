@@ -1,0 +1,7 @@
+.eggs/
+.DS_Store
+build/
+dist/
+Resources/
+setup.py
+__pycache__/

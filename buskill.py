@@ -233,9 +233,9 @@ class Controller:
 
     def __init__(self):
         self.APPROOT = self._getAppRoot()
-        self.LOGLOCATION = "/Logging/"
-        self.TRIGLOCATION = "/Triggers/"
-        self.CONFIGLOCATION = "/Config/"
+        self.LOGLOCATION = self.APPROOT + "/Logging/"
+        self.TRIGLOCATION = self.APPROOT + "/Triggers/"
+        self.CONFIGLOCATION = self.APPROOT + "/Config/"
 
     def _refreshView(self, Main):
         Main.hide()
@@ -313,10 +313,7 @@ class Controller:
         if Trigger is not None:
             if Trigger != "No Triggers Found!":
                 if Trigger != "--Trigger--":
-                    if os.path.exists(self.APPROOT + "/Triggers/" + Trigger + "/Trigger.py"):
-                        Trig = True
-                    else:
-                        self._errorHandling("critical", "Trigger.py could not be found in selected Trigger")
+                    Trig = True
                 else:
                     self._errorHandling("Info", "This placeholder cannot be used, but no triggers were found")
             else:
