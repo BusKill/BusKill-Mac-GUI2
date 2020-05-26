@@ -1,6 +1,6 @@
 import PyQt5.QtWidgets as Qt
 from PyQt5 import *
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, QFile, QTextStream
 import sys
 import os
 import fnmatch
