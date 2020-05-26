@@ -116,6 +116,15 @@ class MainWindow(Qt.QMainWindow):
         self.VersionNumberLabel = Qt.QLabel("Version: " + self.VERSION_NO)
         self.DockContainer.addWidget(self.VersionNumberLabel)
 
+        if APP_CONF._getAppConf() == False:
+            self.ColourButton = Qt.QPushButton("Enable Dark Mode")
+            self.ColourButton.clicked.connect(self._enableDarkMode)
+        else:
+            self.ColourButton = Qt.QPushButton("Enable Light Mode")
+            self.ColourButton.clicked.connect(self._disableDarkMode)
+        self.setFixedSize(100, 25)
+        self.DockContainer.addWidget(self.ColourButton)
+
         self.RefreshButton = Qt.QPushButton("Refresh")
         self.RefreshButton.setFixedSize(100, 25)
         self.RefreshButton.clicked.connect(self._refreshPage)
@@ -152,6 +161,12 @@ class MainWindow(Qt.QMainWindow):
     def _refreshPage(self):
         self.APP_CTRL._refreshView(self)
 
+    def _enableDarkMode(self):
+        APP_CONF._enableDarkMode()
+
+    def _disableDarkMode(self):
+        APP_CONF._disableDarkMode()
+        
     def _runBusKill(self):
         self.Trigger = self.MainTriggerMenu.currentText()
         self.Device = self.MainDeviceMenu.currentText()
@@ -487,7 +502,7 @@ class BusKill_InfoMessage:
 class BusKill_ResetMessage:
 
     def __init__(self):
-                self.msg = Qt.QMessageBox()
+        self.msg = Qt.QMessageBox()
         self.msg.setIcon(Qt.QMessageBox.Information)
         self.msg.setWindowTitle("Success")
         self.msg.setStandardButtons(Qt.QMessageBox.Ok)
@@ -497,10 +512,11 @@ class BusKill_ResetMessage:
 
 def main():
     app = Qt.QApplication(sys.argv)
-    File = QFile("Resources/dark.qss")
-    File.open(QFile.ReadOnly | QFile.Text)
-    stream = QTextStream(File)
-    app.setStyleSheet(stream.readAll())
+    if Configuration._getAppConf() == True:
+        File = QFile("Resources/dark.qss")
+        File.open(QFile.ReadOnly | QFile.Text)
+        stream = QTextStream(File)
+        app.setStyleSheet(stream.readAll())
     UI = MainWindow()
     UI.show()
     app.exec_()
