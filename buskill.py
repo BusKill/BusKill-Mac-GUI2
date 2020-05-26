@@ -13,7 +13,7 @@ class MainWindow(Qt.QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.VERSION_NO = "V1.0"
+        self.VERSION_NO = "V1.1"
         self.setWindowTitle("BusKill Mac")
         self.setFixedSize(500,250)
 
