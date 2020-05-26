@@ -13,7 +13,7 @@ class MainWindow(Qt.QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.VERSION_NO = "V1.0"
+        self.VERSION_NO = "V1.1"
         self.setWindowTitle("BusKill Mac")
         self.setFixedSize(500,250)
 
@@ -260,16 +260,31 @@ class Controller:
             return ["0"]
 
     def _getDevices(self):
-        self.Devices = os.listdir("/dev")
-        self.Disk_Devices = list()
-        for Device in self.Devices:
-            if fnmatch.fnmatch(Device, "*disk*"):
-                if Device.startswith("r") == False:
-                    if fnmatch.fnmatch(Device, "*isk*s*") == False:
-                        if Device.endswith("1") == False:
-                            if Device.endswith("0") == False:
-                                self.Disk_Devices.append(Device)
-        return self.Disk_Devices
+        subprocess.call("ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*' > Devices.txt", shell=True)
+        Usable_Device = list()
+        with open("Devices.txt") as Devices:
+            for Device in Devices:
+                if Device.lower().__contains__("internal") == False:
+                    if Device.lower().__contains__("built-in") == False:
+                        if Device.lower().__contains__("hub") == False:
+                            if Device.__contains__("IOUSBHostDevice") == False:
+                                if Device.lower().__contains__("bluetooth") == False:
+                                    Usable_Device.append(Device)
+                            
+            return Usable_Device
+
+
+    #def _getDevices(self):
+    #    self.Devices = os.listdir("/dev")
+    #    self.Disk_Devices = list()
+    #    for Device in self.Devices:
+    #        if fnmatch.fnmatch(Device, "*disk*"):
+    #            if Device.startswith("r") == False:
+    #                if fnmatch.fnmatch(Device, "*isk*s*") == False:
+    #                    if Device.endswith("1") == False:
+    #                        if Device.endswith("0") == False:
+    #                            self.Disk_Devices.append(Device)
+    #    return self.Disk_Devices
 
     def _getConfig(self):
         try:
