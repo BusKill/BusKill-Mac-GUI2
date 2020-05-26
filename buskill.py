@@ -1,6 +1,6 @@
 import PyQt5.QtWidgets as Qt
 from PyQt5 import *
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, QFile, QTextStream
 import sys
 import os
 import fnmatch
@@ -416,6 +416,34 @@ class Configuration:
             if name != "--config--":
                 self.APP_CTRL._errorHandling("Critical", "Configuration File could not be read")
 
+    def _getAppConf(self):
+        try:
+            with open("app.conf", "r") as Conf:
+                Data = Conf.readlines()
+                return Data[1].split(":")[1].rstrip() #True or false for dark mode
+
+    def _enableDarkMode(self):
+        try:
+            with open("app.conf", "r") as Conf:
+                data = Conf.readlines()
+                data[1].replace("False", "True")
+            with open("app.conf", "w") as Conf:
+                Conf.writelines(data)
+            BusKill_ResetMessage()
+        except FileNotFoundError:
+            self._errorHandling("Critical", "Cannot change to Dark Mode")
+
+    def _disableDarkMode(self):
+        try:
+            with open("app.conf", "r") as Conf:
+                data.Conf.readlines()
+                data[1].replace("False", "True")
+            with open("app.conf", "w") as Conf:
+                ````conf.writelines(data)
+                BusKill_ResetMessage()
+        except FileNotFoundError:
+            self._errorHandling("Critical", "Cannot disable Dark Mode")
+                
 class BusKill_CritMessage:
 
     def __init__(self, Message):
@@ -441,8 +469,23 @@ class BusKill_InfoMessage:
         self.msg.setInformativeText(Message)
         self.msg.exec_()
 
+class BusKill_ResetMessage:
+
+    def __init__(self):
+                self.msg = Qt.QMessageBox()
+        self.msg.setIcon(Qt.QMessageBox.Information)
+        self.msg.setWindowTitle("Success")
+        self.msg.setStandardButtons(Qt.QMessageBox.Ok)
+        self.msg.setText("Please restart the application")
+        self.msg.setInformativeText(Message)
+        self.msg.exec_()
+
 def main():
     app = Qt.QApplication(sys.argv)
+    File = QFile("Resources/dark.qss")
+    File.open(QFile.ReadOnly | QFile.Text)
+    stream = QTextStream(File)
+    app.setStyleSheet(stream.readAll())
     UI = MainWindow()
     UI.show()
     app.exec_()
