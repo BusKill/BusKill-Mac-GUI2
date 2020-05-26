@@ -1,6 +1,7 @@
 import PyQt5.QtWidgets as Qt
 from PyQt5 import *
 from PyQt5.QtCore import QThread, QFile, QTextStream
+from PyQt5.QtGui import QPalette
 import sys
 import os
 import fnmatch
@@ -116,7 +117,7 @@ class MainWindow(Qt.QMainWindow):
         self.VersionNumberLabel = Qt.QLabel("Version: " + self.VERSION_NO)
         self.DockContainer.addWidget(self.VersionNumberLabel)
 
-        if APP_CONF._getAppConf() == False:
+        if self.APP_CTRL._getAppConf() == False:
             self.ColourButton = Qt.QPushButton("Enable Dark Mode")
             self.ColourButton.clicked.connect(self._enableDarkMode)
         else:
@@ -166,7 +167,7 @@ class MainWindow(Qt.QMainWindow):
 
     def _disableDarkMode(self):
         APP_CONF._disableDarkMode()
-        
+
     def _runBusKill(self):
         self.Trigger = self.MainTriggerMenu.currentText()
         self.Device = self.MainDeviceMenu.currentText()
@@ -384,6 +385,36 @@ class Controller:
 
         self._writeLog(Severity, Message)
 
+    def _getAppConf(self):
+        try:
+            with open("app.conf", "r") as Conf:
+                Data = Conf.readlines()
+            return Data[1].split(":")[1].rstrip()
+        except FileNotFoundError:
+            APP_CTRL._errorHandling("Critical", "Config File could be read")
+
+    def _enableDarkMode(self):
+        try:
+            with open("app.conf", "r") as Conf:
+                data = Conf.readlines()
+                data[1].replace("False", "True")
+            with open("app.conf", "w") as Conf:
+                Conf.writelines(data)
+            BusKill_ResetMessage()
+        except FileNotFoundError:
+            self._errorHandling("Critical", "Cannot change to Dark Mode")
+
+    def _disableDarkMode(self):
+        try:
+            with open("app.conf", "r") as Conf:
+                data.Conf.readlines()
+                data[1].replace("False", "True")
+            with open("app.conf", "w") as Conf:
+                conf.writelines(data)
+                BusKill_ResetMessage()
+        except FileNotFoundError:
+            self._errorHandling("Critical", "Cannot disable Dark Mode")
+
 class Runtime(QThread):
 
     def __init__(self, Trigger, Device):
@@ -450,29 +481,9 @@ class Configuration:
         try:
             with open("app.conf", "r") as Conf:
                 Data = Conf.readlines()
-                return Data[1].split(":")[1].rstrip() #True or false for dark mode
-
-    def _enableDarkMode(self):
-        try:
-            with open("app.conf", "r") as Conf:
-                data = Conf.readlines()
-                data[1].replace("False", "True")
-            with open("app.conf", "w") as Conf:
-                Conf.writelines(data)
-            BusKill_ResetMessage()
+            return Data[1].split(":")[1].rstrip() #True or false for dark mode
         except FileNotFoundError:
-            self._errorHandling("Critical", "Cannot change to Dark Mode")
-
-    def _disableDarkMode(self):
-        try:
-            with open("app.conf", "r") as Conf:
-                data.Conf.readlines()
-                data[1].replace("False", "True")
-            with open("app.conf", "w") as Conf:
-                ````conf.writelines(data)
-                BusKill_ResetMessage()
-        except FileNotFoundError:
-            self._errorHandling("Critical", "Cannot disable Dark Mode")
+            self.APP_CTRL._errorHandling("Crtitical", "Configuration File could not be read")
                 
 class BusKill_CritMessage:
 
@@ -510,13 +521,32 @@ class BusKill_ResetMessage:
         self.msg.setInformativeText(Message)
         self.msg.exec_()
 
+#def Palette():
+#    palette = QPalette()
+#    palette.setColor(QPalette.Window, QColor(53, 53, 53))
+#    palette.setColor(QPalette.WindowText, Qt.white)
+#    palette.setColor(QPalette.Base, QColor(25, 25, 25))
+#    palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
+#    palette.setColor(QPalette.ToolTipBase, Qt.white)
+#    palette.setColor(QPalette.ToolTipText, Qt.white)
+#    palette.setColor(QPalette.Text, Qt.white)
+#    palette.setColor(QPalette.Button, QColor(53, 53, 53))
+#    palette.setColor(QPalette.ButtonText, Qt.white)
+#    palette.setColor(QPalette.BrightText, Qt.red)
+#    palette.setColor(QPalette.Link, QColor(42, 130, 218))
+#    palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
+#    palette.setColor(QPalette.HighlightedText, Qt.black)
+#    return palette
+
 def main():
     app = Qt.QApplication(sys.argv)
-    if Configuration._getAppConf() == True:
-        File = QFile("Resources/dark.qss")
-        File.open(QFile.ReadOnly | QFile.Text)
-        stream = QTextStream(File)
-        app.setStyleSheet(stream.readAll())
+    controller = Controller()
+#    if controller._getAppConf() == True:
+#        app.setPalette(Palette())
+        #File = QFile("Resources/dark.qss")
+        #File.open(QFile.ReadOnly | QFile.Text)
+        #stream = QTextStream(File)
+        #app.setStyleSheet(stream.readAll())
     UI = MainWindow()
     UI.show()
     app.exec_()
