@@ -16,13 +16,15 @@ See https://tech.michaelaltfield.net/2020/01/02/buskill-laptop-kill-cord-dead-ma
 
 Requirements:
     -> [py2app] (https://pypi.org/project/py2app/) This can also be installed via pip
+    
     -> [MacPorts] (https://www.macports.org/ports.php?by=variant&substr=qt5)
     -> Installing Macports Python as well as the dependencies 
         -> PyQt5 is mainly
 
 Once you have checked all these boxes you are ready to generate the .app
 
-    -> run the following command:
+
+run the following commands
     
     '''console
       python3 setup.py py2app
@@ -50,7 +52,7 @@ Once you have checked all these boxes you are ready to generate the .app
 
     all the source code remains here in **plain text** code here can be changed still. this is not a binary. it is a package 
 
-    
+
 # Known Issues
 
 -> .py Triggers are no longer supported 
