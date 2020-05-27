@@ -26,33 +26,33 @@ Once you have checked all these boxes you are ready to generate the .app
 
 run the following commands
     
-'''console
+    python3 setup.py py2app
 
-python3 setup.py py2app
-
-'''
     
-    This will then generate a dist/ and build/ folder 
+This will then generate a dist/ and build/ folder 
 
-    -> you now need to add the data files to the .app
+you now need to add the data files to the .app
 
-    '''console
-      mkdir dist/BusKill\ -\ Mac.app/Contents/Resources/Triggers
-      mkdir dist/BusKill\ -\ Mac.app/Contents/Resources/Resources
-      mkdir dist/BusKill\ -\ Mac.app/Contents/Resources/Config
-      mkdir dist/BusKill\ -\ Mac.app/Contents/Resources/Logging
-      cp -r Resources/ dist/BusKill\ -\ Mac.app/Contents/Resources/Resources/
-      cp -r Triggers/ dist/BusKill\ -\ Mac.app/Contents/Resources/Triggers/
-    '''
-
-    -> you will now have a fully working .app package
-
-    _**please note**_
-    once you have generated the .app (or have downloaded from developer) you can navigate to 
+    mkdir dist/BusKill\ -\ Mac.app/Contents/Resources/Triggers
     
-    BusKill\ -\ Mac.app/Contents/Resources
+    mkdir dist/BusKill\ -\ Mac.app/Contents/Resources/Resources
+    
+    mkdir dist/BusKill\ -\ Mac.app/Contents/Resources/Config
+    
+    mkdir dist/BusKill\ -\ Mac.app/Contents/Resources/Logging
+    
+    cp -r Resources/ dist/BusKill\ -\ Mac.app/Contents/Resources/Resources/
+    
+    cp -r Triggers/ dist/BusKill\ -\ Mac.app/Contents/Resources/Triggers/
 
-    all the source code remains here in **plain text** code here can be changed still. this is not a binary. it is a package 
+you will now have a fully working .app package
+
+**please note**
+once you have generated the .app (or have downloaded from developer) you can navigate to 
+    
+    cd BusKill\ -\ Mac.app/Contents/Resources
+
+all the source code remains here in **plain text** code here can be changed still. this is not a binary. it is a package 
 
 
 # Known Issues
