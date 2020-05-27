@@ -27,7 +27,9 @@ Once you have checked all these boxes you are ready to generate the .app
 run the following commands
     
 '''console
+
 python3 setup.py py2app
+
 '''
     
     This will then generate a dist/ and build/ folder 
