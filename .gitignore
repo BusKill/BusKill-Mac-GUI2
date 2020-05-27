@@ -1,7 +1,10 @@
 .eggs/
 build/
 dist/
-Resources/
 setup.py
 __pycache__/
 .DS_Store
+Devices.txt
+Logging/*
+Config/*
+Resources/Icon.icns
