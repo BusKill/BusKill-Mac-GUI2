@@ -260,9 +260,9 @@ class Controller:
             return ["0"]
 
     def _getDevices(self):
-        subprocess.call("ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*' > Devices.txt", shell=True)
+        subprocess.call("ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*' > .Devices.txt", shell=True)
         Usable_Device = list()
-        with open("Devices.txt") as Devices:
+        with open(".Devices.txt") as Devices:
             for Device in Devices:
                 if Device.lower().__contains__("internal") == False:
                     if Device.lower().__contains__("built-in") == False:
@@ -300,11 +300,13 @@ class Controller:
     def _executeTrigger(self, Trigger):
         subprocess.call("Triggers/"+Trigger+"/Trigger.sh")
 
-    def _checkDevice(self, Device):
-        if os.path.exists("/dev/"+Device) == True:
-            return True
-        else:
-            return False
+    def _checkDevices(self, Device):
+        subprocess.call("ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*' > .Devices.txt", shell=True)
+        with open(".Devices.txt") as Devices:
+            if Devices in Devices:
+                return True
+            else:
+                return False
 
     def _validation(self, Trigger ,Device):
         Dev = False
